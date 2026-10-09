@@ -43,3 +43,8 @@ No ads, no chat, no accounts, no analytics. The game makes no network calls besi
 
 ## Credits
 See [CREDITS.md](CREDITS.md).
+
+## Offline (storm-ready)
+- The first online visit precaches every file. After that, the game plays fully in airplane mode, both in the browser and from the home-screen icon. The title screen shows **"Ready to play offline ✓"** once caching is done.
+- Backup: `night-patrol-offline.html` is one self-contained file. Open it directly from Files or Downloads, no internet needed. It is also downloadable from the site at `/night-patrol-offline.html`.
+- 🔋 Battery Saver (on by default) caps the game at 30fps. The game pauses and goes silent when the tab is hidden.

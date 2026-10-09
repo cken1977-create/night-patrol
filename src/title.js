@@ -14,7 +14,8 @@ class TitleScene extends Phaser.Scene {
     this.render();
     this.input.once('pointerdown', () => SFX.init());
   }
-  update(t) { this.far.tilePositionX = t * 0.004; this.mid.tilePositionX = t * 0.012; this.fog.tilePositionX = t * 0.02;
+  update(t) {
+    if (this.offT && this.offT.active) this.offT.setText(location.protocol === 'file:' ? 'Offline file ✓' : (window.__offlineReady ? 'Ready to play offline ✓' : (window.__offlineReady === false ? 'Saving for offline…' : ''))); this.far.tilePositionX = t * 0.004; this.mid.tilePositionX = t * 0.012; this.fog.tilePositionX = t * 0.02;
     (this.previews || []).forEach((p, i) => { p.y = 225 + Math.sin(t / 300 + i) * 5; if ((t / 180 | 0) % 2 !== p.f) { p.f = (t / 180 | 0) % 2; p.setTexture('prev' + i + '_' + p.f); } }); }
   render() {
     this.dyn.forEach(o => o.destroy()); this.dyn = []; this.previews = [];
@@ -28,6 +29,8 @@ class TitleScene extends Phaser.Scene {
       D(makeBtn(this, 270 + i * 210, 452, 195, 36, (locked ? '🔒 ' : '') + m.short, () => { if (!locked) { s.mission = i; this.commit(); } },
         locked ? 0x1a1630 : (s.mission === i ? 0x2f8a5a : 0x2a2050), 15)); });
     D(makeBtn(this, W / 2, 506, 260, 52, '▶  START PATROL', () => this.start(), 0x1f9d55, 24));
+    D(makeBtn(this, 110, 506, 190, 40, s.saver !== false ? '🔋 SAVER: ON' : '🔋 SAVER: OFF', () => { s.saver = s.saver === false; applySaver(); this.commit(); }, s.saver !== false ? 0x2f6a5a : 0x2a2050, 15));
+    this.offT = D(this.add.text(W - 16, 506, '', TXT(14, '#7dffa8')).setOrigin(1, 0.5));
   }
   panel(px, i, D) {
     const p = this.s.p[i], h = HEROES[p.hero];
@@ -45,8 +48,23 @@ class TitleScene extends Phaser.Scene {
       const sw = D(this.add.circle(x, y, 14, c).setStrokeStyle(p.color === c ? 4 : 2, p.color === c ? 0xffffff : 0x000000).setInteractive({ useHandCursor: true }));
       sw.on('pointerup', () => { p.color = c; this.commit(); }); });
     D(makeBtn(this, px, 400, 220, 34, '✎ ' + p.name, () => {
-      const n = window.prompt('Hero name (up to 12 letters):', p.name);
-      if (n) { p.name = n.replace(/[^\w \-']/g, '').trim().slice(0, 12) || p.name; this.commit(); } }, 0x2a2050, 16));
+      this.keyboard(p.name, (n) => { p.name = n; this.commit(); }); }, 0x2a2050, 16));
+  }
+  keyboard(cur, done) {
+    let val = cur; const c = this.add.container(0, 0).setDepth(500);
+    c.add(this.add.rectangle(0, 0, W, H, 0x000000, 0.85).setOrigin(0).setInteractive());
+    c.add(this.add.text(W / 2, 40, 'Type your hero name', TXT(22, '#b9a6ff')).setOrigin(0.5));
+    const shown = this.add.text(W / 2, 95, '', TXT(36, '#ffffff')).setOrigin(0.5); c.add(shown);
+    const upd = () => shown.setText((val || ' ') + '_'); upd();
+    const rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+    rows.forEach((r, ri) => [...r].forEach((ch, i) => { const x = W / 2 - (r.length - 1) * 33 + i * 66, y = 170 + ri * 70;
+      c.add(makeBtn(this, x, y, 58, 58, ch, () => { if (val.length < 12) { val += val.length === 0 || val.endsWith(' ') ? ch : ch.toLowerCase(); upd(); } }, 0x2a2050, 22)); }));
+    c.add(makeBtn(this, W / 2 - 230, 390, 150, 56, 'SPACE', () => { if (val.length < 12 && val && !val.endsWith(' ')) { val += ' '; upd(); } }, 0x2a2050, 18));
+    c.add(makeBtn(this, W / 2 - 60, 390, 150, 56, '⌫ BACK', () => { val = val.slice(0, -1); upd(); }, 0x6a2a3a, 18));
+    c.add(makeBtn(this, W / 2 + 110, 390, 150, 56, 'CLEAR', () => { val = ''; upd(); }, 0x2a2050, 18));
+    c.add(makeBtn(this, W / 2 + 280, 390, 150, 56, 'CANCEL', () => c.destroy(), 0x2a2050, 18));
+    c.add(makeBtn(this, W / 2, 470, 260, 60, '✓ DONE', () => { const n = val.trim(); c.destroy(); if (n) done(n); }, 0x1f9d55, 24));
+    this.kb = c;
   }
   commit() { Save.save(); this.render(); }
   start() {
