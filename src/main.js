@@ -1,4 +1,4 @@
-window.NP_CACHE = 'np-v2'; window.NP_FILES_COUNT = 14;
+window.NP_CACHE = 'np-v3'; window.NP_FILES_COUNT = 14;
 window.addEventListener('load', () => {
   const game = new Phaser.Game({
     type: Phaser.AUTO, parent: 'game', width: W, height: H, backgroundColor: '#05040f',
@@ -15,7 +15,7 @@ window.addEventListener('load', () => {
     window.__offlineReady = false;
     navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'np-cached') window.__offlineReady = true; });
     navigator.serviceWorker.register('sw.js').then(async () => {
-      const check = async () => { const c = await caches.open(window.NP_CACHE || 'np-v2'); const k = await c.keys(); if (k.length >= window.NP_FILES_COUNT) window.__offlineReady = true; };
+      const check = async () => { const c = await caches.open(window.NP_CACHE || 'np-v3'); const k = await c.keys(); if (k.length >= window.NP_FILES_COUNT) window.__offlineReady = true; };
       await navigator.serviceWorker.ready; check(); setTimeout(check, 2500);
     }).catch(() => {});
   }

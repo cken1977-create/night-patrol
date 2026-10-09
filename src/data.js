@@ -22,7 +22,8 @@ const Save = {
   data: null,
   load() {
     try { this.data = JSON.parse(localStorage.getItem(this.key)); } catch (e) {}
-    if (!this.data) this.data = { players: 1, scary: true, unlocked: 0, mission: 0, sound: true,
+    if (this.data && this.data.v !== 2) { this.data.scary = false; this.data.v = 2; } // v2: bright daytime is the default
+    if (!this.data) this.data = { v: 2, players: 1, scary: false, unlocked: 0, mission: 0, sound: true,
       p: [{ hero: 'weaver', color: 0x2fb7ff, name: 'Walker' }, { hero: 'blaster', color: 0xffa630, name: 'Player 2' }] };
     return this.data;
   },
