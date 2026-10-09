@@ -1,46 +1,70 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Night Patrol 3D (preview)</title><meta name="theme-color" content="#05040f">
+<title>Night Patrol 3D — Arcade Preview</title><meta name="theme-color" content="#05040f">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="../icons/icon-180.png">
 <style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;background:#05040f;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-canvas{display:block}#app{position:fixed;inset:0}
-.ov{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(ellipse at 70% 20%,#2b1640,#05040f 70%);z-index:20;text-align:center;padding:10px}
-h1{margin:0;font-size:min(9vw,56px);letter-spacing:2px;color:#e9e3ff;text-shadow:0 0 18px #9b5cff}h1 small{font-size:.4em;color:#7dffa8;display:block;letter-spacing:4px}
-button{font:inherit;font-weight:800;color:#fff;background:#2a2050;border:2px solid #b9a6ff;border-radius:12px;padding:10px 16px;cursor:pointer}
-button.sel{background:#6a4cff}.red{background:#8a1a4a!important}.go{background:#1f9d55;font-size:24px;padding:12px 40px}
-.hb{min-width:130px}.hb small{display:block;font-size:11px;color:#b9a6ff}.sw{width:38px;height:38px;border-radius:50%;padding:0;border:3px solid #000}.sw.sel{border-color:#fff}
-.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}#tip{max-width:560px;color:#d8d0ff;font-size:14px;margin:0}
-#hud{display:none;position:fixed;inset:0;pointer-events:none;z-index:5;text-shadow:0 2px 3px #000}
-#hud .tl{position:absolute;left:14px;top:10px;font-weight:800}#hp{color:#ff5577;font-size:22px}#fuelW{width:100px;height:7px;background:#0008;margin-top:4px}#fuel{height:7px;background:#ffa630}
-#hud .tc{position:absolute;left:50%;top:8px;transform:translateX(-50%);text-align:center;font-weight:800}#score{color:#ffe066;font-size:20px}#obj{color:#d8d0ff}
-#arrowW{margin:4px auto;width:40px;height:40px;position:relative}#arrow{width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:30px solid #ffe066;margin:4px auto;filter:drop-shadow(0 0 6px #ffe066)}#dist{font-size:12px;color:#ffe066}
-#toast{position:fixed;top:30%;left:50%;transform:translateX(-50%);font-weight:800;font-size:22px;opacity:0;transition:opacity .5s;text-align:center;max-width:80%;text-shadow:0 2px 4px #000;z-index:6;pointer-events:none}
-#q,#fps{position:absolute;right:70px;top:12px;font-size:11px;color:#b9a6ff}#fps{top:26px}
-#touch{display:none;position:fixed;inset:0;z-index:4}#joy{position:absolute;left:50px;bottom:50px;width:120px;height:120px;border-radius:50%;background:#ffffff14;border:3px solid #ffffff40;opacity:.5}
-#knob{position:absolute;left:32px;top:32px;width:56px;height:56px;border-radius:50%;background:#ffffff70}
-.btn{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border:3px solid;background:#0003}
-.btn.on{filter:brightness(1.8);transform:scale(.94)}#bJump{right:30px;bottom:40px;width:104px;height:104px;border-color:#39e27a;background:#39e27a30}
-#bFire{right:150px;bottom:30px;width:88px;height:88px;border-color:#ff5577;background:#ff557730}#bSp{right:44px;bottom:160px;width:88px;height:88px;border-color:#4fc3ff;background:#4fc3ff30}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#120a2a;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+canvas{display:block}#app{position:fixed;inset:0}#speed{position:fixed;inset:0;pointer-events:none;z-index:3}
+.ov{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(ellipse at 70% 20%,#2b1640ee,#05040fee 70%);z-index:20;text-align:center;padding:10px}
+h1{margin:0;font-size:min(8vw,52px);font-style:italic;font-weight:900;letter-spacing:2px;color:#fff;text-shadow:0 0 14px #ff4fd8,0 0 30px #4fd8ff}h1 small{font-size:.38em;color:#7dffa8;display:block;letter-spacing:4px;text-shadow:none}
+button{font:inherit;font-weight:800;color:#fff;background:#2a2050cc;border:2px solid #b9a6ff;border-radius:12px;padding:8px 14px;cursor:pointer}
+button.sel{background:linear-gradient(135deg,#ff4fd8,#6a4cff);border-color:#fff;box-shadow:0 0 14px #ff4fd8}.red{background:#8a1a4a!important}
+.go{background:linear-gradient(135deg,#1fd17a,#1f9d55)!important;font-size:22px;padding:12px 30px;border-color:#fff;box-shadow:0 0 18px #1fd17a;font-style:italic}
+#menu{position:fixed;inset:0;z-index:20;pointer-events:none}
+#menu .panel{pointer-events:auto;position:absolute;top:12px;bottom:12px;width:min(31vw,330px);background:#0b0720cc;border:2px solid #6a4cff;border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:9px;overflow:auto;backdrop-filter:blur(4px)}
+#menu .L{left:12px}#menu .R{right:12px}#menu h3{margin:2px 0 0;font-size:12px;letter-spacing:3px;color:#b9a6ff}
+#menu .title{position:absolute;left:50%;top:10px;transform:translateX(-50%);pointer-events:none;width:36vw}
+#menu .bottom{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);pointer-events:auto;display:flex;flex-direction:column;align-items:center;gap:6px;width:36vw}
+#heroName{font-size:30px;font-weight:900;font-style:italic;text-shadow:0 0 12px #4fd8ff}
+.hb{text-align:left;font-size:18px}.hb small{display:block;font-size:11px;color:#d8d0ff;font-weight:600}
+.sw{width:32px;height:32px;border-radius:50%;padding:0;border:3px solid #0008}.sw.sm{width:26px;height:26px}.sw.sel{border-color:#fff;transform:scale(1.15)}
+.chip{padding:6px 10px;font-size:14px}.row{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
+#tip{color:#d8d0ff;font-size:12px;margin:0}
+#hud{display:none;position:fixed;inset:0;pointer-events:none;z-index:5;text-shadow:0 2px 3px #000a}
+#hud .tl{position:absolute;left:14px;top:10px;font-weight:800}#hp{color:#ff4f7a;font-size:24px}#fuelW{width:100px;height:7px;background:#0008;margin-top:4px;border-radius:4px}#fuel{height:7px;background:#ffa630;border-radius:4px}
+#hud .tc{position:absolute;left:50%;top:6px;transform:translateX(-50%);text-align:center;font-weight:900}
+#score{font-size:38px;font-style:italic;color:#fff;text-shadow:0 0 10px #ff4fd8,0 0 22px #ff4fd8,0 3px 0 #6a1a8a;display:inline-block}
+#score.bump{animation:bump .25s ease-out}@keyframes bump{0%{transform:scale(1.35)}100%{transform:scale(1)}}
+#obj{color:#fff;font-size:15px;letter-spacing:1px;background:#0006;border-radius:10px;padding:2px 10px;display:inline-block}
+#combo{display:none;position:absolute;right:80px;top:70px;text-align:right}#comboN{font-size:44px;font-weight:900;font-style:italic;color:#ffe14d;text-shadow:0 0 14px #ff7a1a}
+#comboW{width:120px;height:8px;background:#0007;border-radius:4px;margin-left:auto}#comboBar{height:8px;background:linear-gradient(90deg,#ff4fd8,#ffe14d);border-radius:4px}
+#arrow{width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:30px solid #ffe14d;margin:4px auto;filter:drop-shadow(0 0 6px #ff7a1a)}#dist{font-size:12px;color:#ffe14d}
+#hud .tr{position:absolute;right:70px;top:10px;text-align:right;font-weight:800;font-size:13px}#timer{font-size:20px}#spd{color:#4fd8ff}
+#q,#fps{font-size:10px;color:#d8d0ff}
+#pops{position:fixed;inset:0;pointer-events:none;z-index:7}.pop{position:absolute;top:38%;font-weight:900;font-style:italic;font-size:24px;color:#ffe14d;text-shadow:0 0 8px #ff7a1a,0 2px 0 #000;animation:pop 1s ease-out forwards;transform:translateX(-50%)}
+.pop.big{font-size:56px;top:28%;color:#fff;text-shadow:0 0 16px #ff4fd8,0 0 30px #4fd8ff}@keyframes pop{0%{opacity:0;margin-top:20px;scale:.5}15%{opacity:1;scale:1.2}100%{opacity:0;margin-top:-60px;scale:1}}
+#flash{position:fixed;inset:0;pointer-events:none;opacity:0;transition:opacity .12s;z-index:8}
+#toast{position:fixed;top:24%;left:50%;transform:translateX(-50%);font-weight:900;font-style:italic;font-size:26px;opacity:0;transition:opacity .5s;text-align:center;max-width:80%;text-shadow:0 0 10px #4fd8ff,0 2px 4px #000;z-index:6;pointer-events:none}
+#toast.zoom{animation:zoom .35s ease-out}@keyframes zoom{0%{scale:1.6}100%{scale:1}}
+#touch{display:none;position:fixed;inset:0;z-index:4}#joy{position:absolute;left:50px;bottom:50px;width:120px;height:120px;border-radius:50%;background:#ffffff22;border:3px solid #ffffff80;opacity:.6}
+#knob{position:absolute;left:32px;top:32px;width:56px;height:56px;border-radius:50%;background:#ffffffaa}
+.btn{position:absolute;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-style:italic;font-size:14px;border:3px solid;text-shadow:0 1px 2px #000}
+.btn.on{filter:brightness(1.8);transform:scale(.92)}#bJump{right:30px;bottom:40px;width:104px;height:104px;border-color:#39e27a;background:#39e27a55}
+#bFire{right:150px;bottom:30px;width:88px;height:88px;border-color:#ff5577;background:#ff557755}#bSp{right:44px;bottom:160px;width:88px;height:88px;border-color:#4fc3ff;background:#4fc3ff55}
 #pause{position:absolute;right:14px;top:10px;width:46px;height:42px;border-radius:10px;border:2px solid #b9a6ff;background:#2a2050;display:flex;align-items:center;justify-content:center;font-weight:800}
 #scare{display:none;position:fixed;inset:0;z-index:30;pointer-events:none;background:radial-gradient(circle,#b6ff4a30,transparent 70%)}
 #scare canvas{position:absolute;left:50%;top:55%;transform:translate(-50%,-50%)}
 @keyframes scare{0%{opacity:0;transform:scale(.3)}15%{opacity:1;transform:scale(1.05)}70%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.6)}}
+.stars{font-size:60px;color:#ffe14d;text-shadow:0 0 16px #ff7a1a}
 #rot{display:none;position:fixed;inset:0;background:#05040f;z-index:99;align-items:center;justify-content:center;font-weight:800;font-size:22px;text-align:center}
 @media (orientation:portrait) and (max-width:1100px){#rot{display:flex}}
 </style></head><body>
 <div id="app"></div>
-<div id="menu" class="ov">
-  <h1>NIGHT PATROL<small>3D PREVIEW · MISSION 1</small></h1>
-  <div class="row" id="heroes"></div><div class="row" id="cols"></div>
-  <p id="tip"></p><div style="color:#b9a6ff">Hero: <b id="who"></b> <small>(change the name in the classic game)</small></div>
-  <div class="row"><button id="scaryB">SCARY</button><button id="saverB">SAVER</button><button id="qB">QUALITY</button></div>
-  <button id="go" class="go">▶ START PATROL</button>
-  <div class="row" style="font-size:12px;color:#b9a6ff"><span>No ads · No chat · No data collected</span><span id="offB" style="color:#7dffa8"></span><a href="../" style="color:#b9a6ff">Classic 2D game</a></div>
+<div id="menu">
+  <div class="title"><h1>NIGHT PATROL<small>3D · ARCADE PREVIEW</small></h1></div>
+  <div class="panel L"><h3>HERO</h3><div id="heroes" style="display:flex;flex-direction:column;gap:6px"></div><h3>SUIT</h3><div class="row" id="suits"></div><p id="tip"></p>
+    <div style="color:#b9a6ff;font-size:12px">Name: <b id="who"></b> (edit in classic game)</div><a href="../" style="color:#b9a6ff;font-size:12px">← Classic 2D game</a></div>
+  <div class="panel R"><h3>SUIT COLOR</h3><div class="row" id="cols"></div><h3>GLOW</h3><div class="row" id="accs"></div><h3>EMBLEM</h3><div class="row" id="embs"></div>
+    <h3>OPTIONS</h3><div class="row"><button id="scaryB">SCARY</button><button id="saverB">SAVER</button><button id="qB">GFX</button></div>
+    <div style="font-size:11px;color:#b9a6ff">No ads · No chat · No data collected</div><div id="offB" style="font-size:12px;color:#7dffa8"></div></div>
+  <div class="bottom"><div id="heroName"></div><div id="best" style="color:#ffe14d;font-weight:800"></div><div class="row"><button id="poseB">✨ POSE</button><button id="go" class="go">▶ START MISSION</button></div></div>
 </div>
+<canvas id="speed"></canvas><div id="pops"></div><div id="flash"></div>
 <div id="hud"><div class="tl"><div id="name"></div><div id="hp"></div><div id="fuelW"><div id="fuel"></div></div></div>
-  <div class="tc"><div id="score"></div><div id="obj"></div><div id="arrowW"><div id="arrow"></div></div><div id="dist"></div></div><div id="q"></div><div id="fps"></div></div>
+  <div class="tc"><div id="score">0</div><br><div id="obj"></div><div id="arrow"></div><div id="dist"></div></div>
+  <div class="tr"><div id="timer"></div><div id="spd"></div><div id="q"></div><div id="fps"></div></div>
+  <div id="combo"><div id="comboN"></div><div style="font-weight:900;font-style:italic;color:#fff">COMBO</div><div id="comboW"><div id="comboBar"></div></div></div></div>
 <div id="toast"></div>
 <div id="touch"><div id="joy"><div id="knob"></div></div><div class="btn" id="bJump">JUMP</div><div class="btn" id="bFire">BLAST</div><div class="btn" id="bSp">SP</div><div class="btn" id="pause" style="border-radius:10px">II</div></div>
 <div id="pauseMenu" class="ov" style="display:none"><h1>Paused</h1><div class="row"><button onclick="document.getElementById('pause').click()" class="go">RESUME</button><button onclick="location.reload()">MENU</button></div></div>

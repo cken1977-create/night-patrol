@@ -21,3 +21,7 @@ Made by Clarence Kennedy (Grandpa) for the family.
 ## Night Patrol 3D (preview, branch `3d`)
 - Engine: [three.js r169](https://threejs.org), MIT License. Bundled into `3d/game3d.js` with esbuild, including the EffectComposer, UnrealBloomPass and OutputPass addons (MIT).
 - All 3D models (city, heroes, shadow creatures, lamps, beacons, clock tower) and textures are generated procedurally in code (`3d/src/main.js`). They are original work, released CC0 with this project. No third-party model packs are used yet.
+
+## 3D heroes: rig + animations
+- Humanoid mannequin and animations: **Universal Animation Library (Standard, free)** by **Quaternius**, licensed under **CC0 1.0**. Source: https://quaternius.itch.io/universal-animation-library, glTF mirror: https://github.com/J-Ponzo/gltf-universal-animation-library. License copy: `3d/assets/UAL_LICENSE.txt`.
+- Hero suits (masks, helmet, jetpack, arm cannon, hood, scarf, cape, emblems) are procedural (original, CC0).
