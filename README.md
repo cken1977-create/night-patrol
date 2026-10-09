@@ -18,7 +18,7 @@ Each player picks a hero, color, and name. Settings are saved on the device only
 2. **Lost & Found**: rescue 4 lost pets, then reach the door.
 3. **The Hollow King**: boss fight in 3 phases (orb volleys, summoned shadows, dive attacks). Beat him to bring back the dawn.
 
-**Scary Mode** (on by default, can be switched off) makes the streets darker, adds flickering lamps, whispers, a heartbeat at low health, and surprise jump-scare monsters. There is no gore: monsters pop into sparks.
+**Scary Mode** (OFF by default; the default look is a bright golden-hour city) makes the streets darker, adds flickering lamps, whispers, a heartbeat at low health, and surprise jump-scare monsters. There is no gore: monsters pop into sparks.
 
 ## Controls
 - **Touch, 1 player:** floating joystick on the left half. JUMP, BLAST, and the special button are on the right.

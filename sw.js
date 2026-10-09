@@ -1,6 +1,6 @@
 // Night Patrol service worker: precache everything, then serve cache-first
 // (fast + reliable on flaky storm-time connections), refreshing in the background.
-const V = 'np-v2';
+const V = 'np-v3';
 const FILES = ['./', 'index.html', 'manifest.webmanifest', 'vendor/phaser.min.js', 'src/audio.js', 'src/data.js', 'src/art.js', 'src/title.js', 'src/game.js', 'src/ui.js', 'src/main.js', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-180.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(V).then(c => c.addAll(FILES.map(f => new Request(f, { cache: 'reload' })))).then(() => self.skipWaiting()));

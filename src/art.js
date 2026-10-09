@@ -1,5 +1,7 @@
 // All art is generated procedurally at runtime (no external image assets).
 const Art = {
+  // crisp outline / rim (WebGL FX; silently skipped on canvas renderer)
+  outline(obj, color, strength) { try { if (obj.preFX) obj.preFX.addGlow(color, strength, 0, false, 0.1, 6); } catch (e) {} },
   mix(a, b, t) { const A = Phaser.Display.Color.IntegerToColor(a), B = Phaser.Display.Color.IntegerToColor(b);
     return Phaser.Display.Color.GetColor(A.red + (B.red - A.red) * t | 0, A.green + (B.green - A.green) * t | 0, A.blue + (B.blue - A.blue) * t | 0); },
   gfx(scene) { return scene.make.graphics({ x: 0, y: 0, add: false }); },
@@ -80,6 +82,31 @@ const Art = {
     this.canvas(scene, 'ledge', 32, 14, (c) => { c.fillStyle = '#3c3552'; c.fillRect(0, 0, 32, 14); c.fillStyle = '#5a5078'; c.fillRect(0, 0, 32, 4); c.fillStyle = '#231e33'; c.fillRect(30, 0, 2, 14); });
     this.canvas(scene, 'street', 64, 64, (c) => { c.fillStyle = '#16131f'; c.fillRect(0, 0, 64, 64); c.fillStyle = '#2a2538'; c.fillRect(0, 0, 64, 10); c.fillStyle = '#3a3450'; c.fillRect(0, 0, 64, 3);
       c.fillStyle = 'rgba(255,220,120,0.25)'; c.fillRect(8, 36, 28, 4); });
+
+    // ---- DAYTIME (default) palette: bright, saturated, readable ----
+    this.canvas(scene, 'skyD', 64, 540, (c, w, h) => { const gr = c.createLinearGradient(0, 0, 0, h);
+      gr.addColorStop(0, '#2f8fff'); gr.addColorStop(0.55, '#7cc8ff'); gr.addColorStop(0.85, '#ffd9a0'); gr.addColorStop(1, '#ffb877'); c.fillStyle = gr; c.fillRect(0, 0, w, h); });
+    this.canvas(scene, 'moonD', 160, 160, (c) => { const gr = c.createRadialGradient(80, 80, 20, 80, 80, 80);
+      gr.addColorStop(0, 'rgba(255,240,170,0.9)'); gr.addColorStop(1, 'rgba(255,240,170,0)'); c.fillStyle = gr; c.fillRect(0, 0, 160, 160);
+      c.fillStyle = '#fff6c8'; c.beginPath(); c.arc(80, 80, 30, 0, 7); c.fill(); });
+    const skyD = (key, cols, seed, hmin, hmax, outline) => this.canvas(scene, key, 1024, 360, (c, w, h) => {
+      let s = seed; const R = () => (s = (s * 16807) % 2147483647) / 2147483647; let x = 0;
+      while (x < w) { const bw = 40 + R() * 90, bh = hmin + R() * (hmax - hmin), col = cols[(R() * cols.length) | 0];
+        c.fillStyle = col; c.fillRect(x, h - bh, bw, bh); c.fillStyle = 'rgba(255,255,255,0.18)'; c.fillRect(x, h - bh, 5, bh);
+        for (let yy = h - bh + 10; yy < h - 8; yy += 16) for (let xx = x + 8; xx < x + bw - 8; xx += 12) { c.fillStyle = 'rgba(220,245,255,0.55)'; c.fillRect(xx, yy, 5, 7); }
+        if (outline) { c.strokeStyle = outline; c.lineWidth = 2; c.strokeRect(x + 1, h - bh + 1, bw - 2, bh); }
+        x += bw + R() * 6; } });
+    skyD('farD', ['#a9c6f0', '#b9b4ec', '#9fd3e6'], 11, 80, 300, null);
+    skyD('midD', ['#6f8fd8', '#8a7ad6', '#5fb3c9', '#d98fb0'], 77, 60, 220, 'rgba(30,30,70,0.5)');
+    this.canvas(scene, 'fogD', 8, 8, (c) => {});
+    [['#ff6b5a', '#c94a3d'], ['#ffc23d', '#d6951c'], ['#38a8f0', '#227ab8']].forEach(([base, edge], v) => this.canvas(scene, 'wall' + v + 'D', 128, 128, (c) => {
+      c.fillStyle = base; c.fillRect(0, 0, 128, 128); c.fillStyle = edge; c.fillRect(0, 0, 4, 128); c.fillStyle = 'rgba(255,255,255,0.25)'; c.fillRect(4, 0, 3, 128);
+      for (let yy = 12; yy < 128; yy += 32) for (let xx = 10; xx < 128; xx += 30) {
+        c.fillStyle = '#1d2b4a'; c.fillRect(xx - 2, yy - 2, 18, 22); c.fillStyle = Math.random() < 0.5 ? '#bfeaff' : '#8fd0ff'; c.fillRect(xx, yy, 14, 18);
+        c.fillStyle = 'rgba(255,255,255,0.7)'; c.fillRect(xx + 2, yy + 2, 3, 8); } }));
+    this.canvas(scene, 'ledgeD', 32, 14, (c) => { c.fillStyle = '#2a2f4a'; c.fillRect(0, 0, 32, 14); c.fillStyle = '#fff4d6'; c.fillRect(0, 2, 32, 8); c.fillStyle = '#ffffff'; c.fillRect(0, 2, 32, 2); });
+    this.canvas(scene, 'streetD', 64, 64, (c) => { c.fillStyle = '#4a4e63'; c.fillRect(0, 0, 64, 64); c.fillStyle = '#d9d2c3'; c.fillRect(0, 0, 64, 12); c.fillStyle = '#2a2f4a'; c.fillRect(0, 12, 64, 2);
+      c.fillStyle = '#ffd23d'; c.fillRect(8, 36, 28, 5); });
     // enemies
     g = this.gfx(scene); g.fillStyle(0x6a2cff, 0.10); g.fillCircle(24, 22, 23); g.fillStyle(0x6a2cff, 0.18); g.fillCircle(24, 22, 18);
     g.fillStyle(0x0a0612); g.fillTriangle(12, 26, 36, 26, 22, 47); g.fillCircle(24, 21, 14);

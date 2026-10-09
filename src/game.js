@@ -6,23 +6,23 @@ class GameScene extends Phaser.Scene {
   init(data) { this.cfg = data; this.mission = MISSIONS[data.mission]; this.mi = data.mission; }
   create() {
     Art.base(this);
-    const m = this.mission, scary = this.cfg.scary; this.scary = scary;
+    const m = this.mission, scary = this.cfg.scary; this.scary = scary; const D = scary ? '' : 'D'; this.D = D;
     this.started = false; this.ended = false; this.score = this.cfg.score || 0; this.t = 0;
     this.len = m.len; this.isBoss = m.type === 'boss';
     this.physics.world.setBounds(0, 0, this.len, WORLD_H); this.physics.world.gravity.y = 1400;
     this.physics.world.setFPS(60);
     const cam = this.cameras.main; cam.setBounds(0, 0, this.len, WORLD_H); cam.setRoundPixels(false);
     // background parallax
-    this.sky = this.add.image(0, 0, 'sky').setOrigin(0).setScrollFactor(0).setDisplaySize(W, H).setDepth(-10);
+    this.sky = this.add.image(0, 0, 'sky' + D).setOrigin(0).setScrollFactor(0).setDisplaySize(W, H).setDepth(-10);
     this.dawn = this.add.image(0, 0, 'dawn').setOrigin(0).setScrollFactor(0).setDisplaySize(W, H).setDepth(-10).setAlpha(0);
-    this.moon = this.add.image(780, 100, 'moon').setScrollFactor(0).setDepth(-9);
-    this.far = this.add.tileSprite(0, 0, W, 360, 'far').setOrigin(0).setScrollFactor(0).setDepth(-8);
-    this.mid = this.add.tileSprite(0, 0, W, 360, 'mid').setOrigin(0).setScrollFactor(0).setDepth(-7);
+    this.moon = this.add.image(780, 100, 'moon' + D).setScrollFactor(0).setDepth(-9);
+    this.far = this.add.tileSprite(0, 0, W, 360, 'far' + D).setOrigin(0).setScrollFactor(0).setDepth(-8);
+    this.mid = this.add.tileSprite(0, 0, W, 360, 'mid' + D).setOrigin(0).setScrollFactor(0).setDepth(-7);
     this.platforms = this.physics.add.staticGroup(); this.anchors = []; this.lamps = []; this.lightsList = [];
     this.props = this.add.graphics().setDepth(-2);
     const gz = this.add.zone(this.len / 2, GROUND + 20, this.len, 40); this.physics.add.existing(gz, true); this.ground = gz;
-    this.add.tileSprite(0, GROUND, this.len, 64, 'street').setOrigin(0).setDepth(-1);
-    this.fog = this.add.tileSprite(0, 0, W, 128, 'fog').setOrigin(0).setScrollFactor(0).setDepth(30).setScale(1, 1.5).setAlpha(scary ? 1 : 0.6);
+    this.add.tileSprite(0, GROUND, this.len, 64, 'street' + D).setOrigin(0).setDepth(-1);
+    this.fog = this.add.tileSprite(0, 0, W, 128, 'fog' + D).setOrigin(0).setScrollFactor(0).setDepth(30).setScale(1, 1.5).setAlpha(scary ? 1 : 0);
     // groups
     this.enemies = this.physics.add.group(); this.blasts = this.physics.add.group({ allowGravity: false, maxSize: 70 });
     this.orbs = this.physics.add.group({ allowGravity: false }); this.objs = this.physics.add.staticGroup();
@@ -34,7 +34,7 @@ class GameScene extends Phaser.Scene {
     this.createPlayers();
     // darkness layer (half-res render texture for speed)
     this.dark = this.add.renderTexture(0, 0, W / 2, H / 2).setOrigin(0).setScrollFactor(0).setScale(2).setDepth(40);
-    this.lightImg = this.make.image({ key: 'light', add: false }); this.darkAlpha = scary ? 0.9 : 0.5;
+    this.lightImg = this.make.image({ key: 'light', add: false }); this.darkAlpha = scary ? 0.9 : 0;
     // physics links
     const ps = this.players.map(p => p.s);
     this.physics.add.collider(ps, this.ground);
@@ -66,8 +66,8 @@ class GameScene extends Phaser.Scene {
   addAnchor(x, y, fromY) { this.props.lineStyle(2, 0x6c6890, 0.9); this.props.lineBetween(x, fromY, x, y);
     this.add.image(x, y, 'anchor').setDepth(-1); this.anchors.push({ x, y }); }
   building(x, top, w, v) {
-    this.add.tileSprite(x, top, w, GROUND - top, 'wall' + v).setOrigin(0).setDepth(-3);
-    this.add.tileSprite(x - 6, top - 2, w + 12, 14, 'ledge').setOrigin(0).setDepth(-2);
+    this.add.tileSprite(x, top, w, GROUND - top, 'wall' + v + this.D).setOrigin(0).setDepth(-3);
+    this.add.tileSprite(x - 6, top - 2, w + 12, 14, 'ledge' + this.D).setOrigin(0).setDepth(-2);
     this.addPlatform(x - 6, top - 2, w + 12);
   }
   buildCity(m) {
@@ -86,7 +86,7 @@ class GameScene extends Phaser.Scene {
       if (gap > 60) this.addAnchor(b.x + b.w + gap / 2, Math.min(b.top, nb.top) - 190, 0);
     });
     // clock tower
-    this.add.tileSprite(tower.x, tower.top, tower.w, GROUND - tower.top, 'wall1').setOrigin(0).setDepth(-3);
+    this.add.tileSprite(tower.x, tower.top, tower.w, GROUND - tower.top, 'wall1' + this.D).setOrigin(0).setDepth(-3);
     this.props.fillStyle(0x1b1530); this.props.fillTriangle(tower.x - 20, tower.top, tower.x + tower.w + 20, tower.top, tower.x + tower.w / 2, tower.top - 160);
     this.props.fillStyle(0xfff3c0, 0.9); this.props.fillCircle(tower.x + tower.w / 2, tower.top + 90, 56); this.props.lineStyle(5, 0x1b1530); this.props.strokeCircle(tower.x + tower.w / 2, tower.top + 90, 56);
     this.props.lineBetween(tower.x + tower.w / 2, tower.top + 90, tower.x + tower.w / 2, tower.top + 50); this.props.lineBetween(tower.x + tower.w / 2, tower.top + 90, tower.x + tower.w / 2 + 28, tower.top + 100);
@@ -111,12 +111,12 @@ class GameScene extends Phaser.Scene {
   }
   buildArena() {
     this.building(0, 740, 420, 0); this.building(1500, 740, 420, 1); this.cameras.main.setBounds(0, 340, this.len, 560);
-    [[540, 720, 260], [1120, 720, 260], [820, 610, 280]].forEach(([x, y, w]) => { this.add.tileSprite(x, y, w, 14, 'ledge').setOrigin(0).setDepth(-2); this.addPlatform(x, y, w); });
+    [[540, 720, 260], [1120, 720, 260], [820, 610, 280]].forEach(([x, y, w]) => { this.add.tileSprite(x, y, w, 14, 'ledge' + this.D).setOrigin(0).setDepth(-2); this.addPlatform(x, y, w); });
     for (let ax = 200; ax < this.len; ax += 260) this.addAnchor(ax, 420 + (ax / 260 % 2) * 40, 340);
     this.needed = 0; this.done = 0; this.objLabel = '';
     const n = this.cfg.players.length;
     this.boss = this.physics.add.sprite(960, 480, 'boss').setDepth(46); this.boss.body.setAllowGravity(false); this.boss.body.setImmovable(true); this.boss.body.setCircle(80, 40, 45);
-    this.boss.hp = this.boss.maxHp = 90 * (n === 2 ? 1.5 : 1); this.boss.phase = 1; this.boss.atk = 3; this.boss.sum = 8; this.boss.dive = 0; this.boss.t = 0;
+    if (!this.scary) Art.outline(this.boss, 0xff4fd8, 5); this.boss.hp = this.boss.maxHp = 90 * (n === 2 ? 1.5 : 1); this.boss.phase = 1; this.boss.atk = 3; this.boss.sum = 8; this.boss.dive = 0; this.boss.t = 0;
     this.bossGlow = this.add.image(960, 480, 'glow').setScale(3.5).setTint(0x7d2cff).setBlendMode('ADD').setDepth(45);
     this.startPos = { x: 150, y: 680 };
   }
@@ -124,7 +124,7 @@ class GameScene extends Phaser.Scene {
     this.players = this.cfg.players.map((pc, i) => {
       Art.hero(this, 'hero' + i + '_0', pc.hero, pc.color, 0); Art.hero(this, 'hero' + i + '_1', pc.hero, pc.color, 1);
       const s = this.physics.add.sprite(this.startPos.x + i * 60, this.startPos.y, 'hero' + i + '_0').setDepth(20);
-      s.body.setSize(22, 50).setOffset(13, 12); s.setCollideWorldBounds(true); s.body.setMaxVelocity(1100, 1100);
+      s.body.setSize(22, 50).setOffset(13, 12); Art.outline(s, 0x14102a, 4); s.setCollideWorldBounds(true); s.body.setMaxVelocity(1100, 1100);
       const label = this.add.text(0, 0, pc.name, TXT(12, '#' + pc.color.toString(16).padStart(6, '0'))).setOrigin(0.5, 1).setDepth(48);
       const p = { i, cfg: pc, hero: pc.hero, s, label, hp: 5, maxHp: 5, face: 1, jumps: 0, fireCd: 0, inv: 0, fuel: 100, dashT: 0, dashCd: 0, cloakT: 0,
         swing: null, down: false, safe: { x: s.x, y: s.y }, safeT: 0, walkT: 0, frame: 0 };
@@ -243,7 +243,7 @@ class GameScene extends Phaser.Scene {
     const e = this.enemies.create(x, y, kind).setDepth(45); e.kind = kind;
     if (kind === 'wisp') { e.body.setAllowGravity(false); e.body.setCircle(15, 9, 7); e.hp = 2; e.spd = 80 + Math.random() * 40 + this.mi * 15 + (this.scary ? 15 : 0); e.ph = Math.random() * 6; }
     else { e.body.setSize(44, 22).setOffset(10, 14); e.hp = 3; e.spd = 110 + this.mi * 15; }
-    e.setAlpha(0); this.tweens.add({ targets: e, alpha: 1, duration: 400 }); return e;
+    if (!this.scary) Art.outline(e, 0xff4fd8, 3); e.setAlpha(0); this.tweens.add({ targets: e, alpha: 1, duration: 400 }); return e;
   }
   spawner(dt) {
     this.nextSpawn -= dt; if (this.nextSpawn > 0) return;

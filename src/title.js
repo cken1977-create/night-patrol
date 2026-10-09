@@ -1,15 +1,15 @@
 class TitleScene extends Phaser.Scene {
   constructor() { super('Title'); }
   create() {
-    Art.base(this); this.s = Save.load(); SFX.setOn(this.s.sound);
-    this.add.image(0, 0, 'sky').setOrigin(0).setDisplaySize(W, H);
-    this.add.image(800, 110, 'moon');
-    this.far = this.add.tileSprite(0, H - 360, W, 360, 'far').setOrigin(0);
-    this.mid = this.add.tileSprite(0, H - 300, W, 360, 'mid').setOrigin(0);
-    this.fog = this.add.tileSprite(0, H - 200, W, 128, 'fog').setOrigin(0).setScale(1, 1.6);
-    this.add.rectangle(0, 0, W, H, 0x000000, 0.35).setOrigin(0);
+    Art.base(this); this.s = Save.load(); SFX.setOn(this.s.sound); const D = this.s.scary ? '' : 'D';
+    this.add.image(0, 0, 'sky' + D).setOrigin(0).setDisplaySize(W, H);
+    this.add.image(800, 110, 'moon' + D);
+    this.far = this.add.tileSprite(0, H - 360, W, 360, 'far' + D).setOrigin(0);
+    this.mid = this.add.tileSprite(0, H - 300, W, 360, 'mid' + D).setOrigin(0);
+    this.fog = this.add.tileSprite(0, H - 200, W, 128, 'fog' + D).setOrigin(0).setScale(1, 1.6);
+    this.add.rectangle(0, 0, W, H, 0x000000, this.s.scary ? 0.35 : 0.12).setOrigin(0);
     this.add.text(W / 2, 34, 'NIGHT PATROL', TXT(46, '#e9e3ff', { strokeThickness: 8 })).setOrigin(0.5).setShadow(0, 0, '#9b5cff', 18, true, true);
-    this.add.text(W / 2, 70, 'A family game  •  No ads  •  No chat  •  No data collected', TXT(13, '#b9a6ff')).setOrigin(0.5);
+    this.add.text(W / 2, 70, 'A family game  •  No ads  •  No chat  •  No data collected', TXT(13, this.s.scary ? '#b9a6ff' : '#ffffff')).setOrigin(0.5);
     this.dyn = [];
     this.render();
     this.input.once('pointerdown', () => SFX.init());
@@ -22,7 +22,7 @@ class TitleScene extends Phaser.Scene {
     const s = this.s, D = (o) => (this.dyn.push(o), o);
     D(makeBtn(this, 250, 110, 150, 40, '1 PLAYER', () => { s.players = 1; this.commit(); }, s.players === 1 ? 0x6a4cff : 0x2a2050, 17));
     D(makeBtn(this, 415, 110, 160, 40, '2 PLAYERS', () => { s.players = 2; this.commit(); }, s.players === 2 ? 0x6a4cff : 0x2a2050, 17));
-    D(makeBtn(this, 640, 110, 220, 40, s.scary ? 'SCARY MODE: ON 👻' : 'SCARY MODE: OFF', () => { s.scary = !s.scary; this.commit(); }, s.scary ? 0x8a1a4a : 0x2a2050, 17));
+    D(makeBtn(this, 640, 110, 220, 40, s.scary ? 'SCARY MODE: ON 👻' : 'SCARY MODE: OFF ☀️', () => { s.scary = !s.scary; Save.save(); this.scene.restart(); }, s.scary ? 0x8a1a4a : 0x2a2050, 17));
     const xs = s.players === 1 ? [W / 2] : [250, 710];
     xs.forEach((px, i) => this.panel(px, i, D));
     MISSIONS.forEach((m, i) => { const locked = i > s.unlocked;
