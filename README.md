@@ -2,6 +2,8 @@
 
 A tablet-first co-op hero game set in a haunted city at night. Grandpa made it for the family.
 
+**Live:** https://night-patrol-brsa-registry.vercel.app
+
 **Play:** open the site on a tablet, turn it sideways, and tap **Share → Add to Home Screen** (iPad Safari) or **⋮ → Install app** (Android Chrome).
 
 ## Heroes
