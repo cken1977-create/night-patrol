@@ -17,3 +17,7 @@ Made by Clarence Kennedy (Grandpa) for the family.
 
 ## Privacy
 - No ads, no chat, no accounts, no analytics, no network calls besides loading the game itself. Settings and progress are saved only on the device (localStorage).
+
+## Night Patrol 3D (preview, branch `3d`)
+- Engine: [three.js r169](https://threejs.org), MIT License. Bundled into `3d/game3d.js` with esbuild, including the EffectComposer, UnrealBloomPass and OutputPass addons (MIT).
+- All 3D models (city, heroes, shadow creatures, lamps, beacons, clock tower) and textures are generated procedurally in code (`3d/src/main.js`). They are original work, released CC0 with this project. No third-party model packs are used yet.
